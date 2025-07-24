@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ketentuan Penggunaan - ModMe</title>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Material Design 3 Color Palette */
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-on-secondary-container: #1D192B;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-error: #B3261E;
+      --md-sys-color-on-error: #FFFFFF;
+    }
+
+    /* Dark Theme */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --md-sys-color-primary: #D0BCFF;
+        --md-sys-color-on-primary: #381E72;
+        --md-sys-color-primary-container: #4F378B;
+        --md-sys-color-secondary: #CCC2DC;
+        --md-sys-color-on-secondary: #332D41;
+        --md-sys-color-surface: #1C1B1F;
+        --md-sys-color-on-surface: #E6E1E5;
+        --md-sys-color-surface-variant: #49454F;
+        --md-sys-color-on-surface-variant: #CAC4D0;
+      }
+    }
+
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      color: var(--md-sys-color-on-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 2rem 0;
+    }
+
+    .terms-container {
+      background-color: var(--md-sys-color-surface-variant);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      color: var(--md-sys-color-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h2 {
+      color: var(--md-sys-color-primary);
+      margin: 1.5rem 0 1rem;
+    }
+
+    p, ul {
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    strong {
+      color: var(--md-sys-color-primary);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .creator-credit {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .terms-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <span class="material-symbols-outlined">extension</span>
+          <span>ModMe</span>
+        </div>
+        <button class="back-button" onclick="window.history.back()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Kembali
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="terms-container">
+        <h1>
+          <span class="material-symbols-outlined">description</span>
+          Ketentuan Penggunaan ModMe
+        </h1>
+        
+        <p>Selamat datang di ModMe! Sebelum Anda menggunakan platform ini untuk mengupload atau mengunduh mod, harap baca ketentuan penggunaan berikut dengan seksama.</p>
+        
+        <h2>1. Persyaratan Umum</h2>
+        <ul>
+          <li>Platform ini <strong>gratis</strong> digunakan untuk berbagi mod game.</li>
+          <li>Anda harus berusia minimal 13 tahun untuk menggunakan platform ini.</li>
+          <li>Dilarang mengupload konten yang melanggar hak cipta atau mengandung malware.</li>
+        </ul>
+        
+        <h2>2. Ketentuan Upload Mod</h2>
+        <ul>
+          <li><strong>Deskripsi wajib</strong> diisi dengan jelas dan detail tentang mod yang diupload.</li>
+          <li>Pastikan mod yang diupload <strong>bukan karya orang lain</strong> yang Anda klaim sebagai milik sendiri.</li>
+          <li>Mod harus kompatibel dengan game yang dituju dan tidak menyebabkan kerusakan pada sistem pengguna.</li>
+          <li>Harap sertakan informasi versi game yang didukung oleh mod Anda.</li>
+        </ul>
+        
+        <h2>3. Konten yang Dilarang</h2>
+        <ul>
+          <li>Konten ilegal, plagiat, atau melanggar hak cipta</li>
+          <li>Mod yang mengandung virus, malware, atau script berbahaya</li>
+          <li>Konten SARA, pornografi, atau kekerasan</li>
+          <li>Mod yang dirancang untuk menipu atau melakukan kecurangan dalam game</li>
+        </ul>
+        
+        <h2>4. Tanggung Jawab Pengguna</h2>
+        <ul>
+          <li>Anda bertanggung jawab penuh atas mod yang diupload.</li>
+          <li>ModMe tidak bertanggung jawab atas kerusakan yang mungkin terjadi akibat penggunaan mod.</li>
+          <li>Pengunduh disarankan untuk memindai file dengan antivirus sebelum menginstall mod.</li>
+        </ul>
+        
+        <h2>5. Perubahan Ketentuan</h2>
+        <p>Kami dapat mengubah ketentuan ini sewaktu-waktu. Perubahan akan diberitahukan melalui website.</p>
+        
+        <h2>6. Kontak</h2>
+        <p>Untuk pertanyaan atau laporan, silakan hubungi kami di <strong>takashihayabusha@gmail.com</strong>.</p>
+        
+        <p>Terima kasih telah menjadi bagian dari komunitas ModMe!</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="contact-info">
+          <span class="material-symbols-outlined">mail</span>
+          <a href="mailto:takashihayabusha@gmail.com" style="color: white;">takashihayabusha@gmail.com</a>
+        </div>
+        <p class="creator-credit">Creator by: ab.iqqq</p>
+        <p>&copy; <span id="current-year"></span> ModMe - Koleksi Mod Terbaik</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
