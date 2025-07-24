@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ModMe - Koleksi Mod Terbaik</title>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  
+  <style>
+    /* Material Design 3 Color Palette */
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-on-secondary-container: #1D192B;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-error: #B3261E;
+      --md-sys-color-on-error: #FFFFFF;
+    }
+
+    /* Dark Theme */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --md-sys-color-primary: #D0BCFF;
+        --md-sys-color-on-primary: #381E72;
+        --md-sys-color-primary-container: #4F378B;
+        --md-sys-color-secondary: #CCC2DC;
+        --md-sys-color-on-secondary: #332D41;
+        --md-sys-color-surface: #1C1B1F;
+        --md-sys-color-on-surface: #E6E1E5;
+        --md-sys-color-surface-variant: #49454F;
+        --md-sys-color-on-surface-variant: #CAC4D0;
+      }
+    }
+
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    /* Mod Grid */
+    .mod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* Mod Card */
+    .mod-card {
+      background-color: var(--md-sys-color-surface-variant);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .mod-card.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mod-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .mod-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .mod-card:hover .mod-image {
+      transform: scale(1.05);
+    }
+
+    .mod-content {
+      padding: 1.5rem;
+    }
+
+    .mod-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .mod-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--md-sys-color-on-surface-variant);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .mod-description {
+      margin-bottom: 1.5rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .mod-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .button-primary {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+
+    .button-primary:hover {
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      transform: scale(1.05);
+    }
+
+    .button-secondary {
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      margin-bottom: 2rem;
+      background-color: var(--md-sys-color-surface-variant);
+      border-radius: 100px;
+      overflow: hidden;
+      padding: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.75rem 1rem;
+      color: var(--md-sys-color-on-surface);
+      font-size: 1rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+    }
+
+    .search-button {
+      background: none;
+      border: none;
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: pointer;
+      padding: 0 1rem;
+      transition: transform 0.2s;
+    }
+
+    .search-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Dialogs */
+    .dialog-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dialog-content {
+      background-color: var(--md-sys-color-surface);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .dialog-title {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: var(--md-sys-color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 4px;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Notice Text */
+    .notice-text {
+      text-align: center;
+      padding: 1rem;
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .notice-text a {
+      color: var(--md-sys-color-primary);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .notice-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .creator-credit {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 50;
+    }
+
+    .fab:hover {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .mod-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      main {
+        padding: 1rem;
+      }
+      
+      .fab {
+        bottom: 1rem;
+        right: 1rem;
+      }
+      
+      .dialog-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="animate__animated animate__fadeInDown">
+      <div class="header-content">
+        <div class="logo">
+          <span class="material-symbols-outlined">extension</span>
+          <span>ModMe</span>
+        </div>
+        <nav>
+          <button id="upload-button" class="button button-secondary animate__animated animate__pulse animate__infinite animate__slower">
+            <span class="material-symbols-outlined">upload</span>
+            Upload Mod
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <h1 class="animate__animated animate__fadeIn">Koleksi Mod Terbaik</h1>
+      <p class="animate__animated animate__fadeIn animate__delay-1s">Temukan mod-mod keren untuk game favorit Anda</p>
+      
+      <div class="notice-text">
+        <p>Website ini gratis, Anda bisa mengupload mod-mod Anda ke website ini. 
+        <a href="read.html">Harap baca ketentuan terlebih dahulu</a> dan pastikan menyertakan deskripsi dengan benar.</p>
+      </div>
+      
+      <div class="search-bar animate__animated animate__fadeIn animate__delay-1s">
+        <input type="text" class="search-input" placeholder="Cari mod..." id="search-input">
+        <button class="search-button" id="search-button">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+      </div>
+      
+      <div id="mod-container">
+        <!-- Mods will be loaded here -->
+        <div class="empty-state" id="empty-state">
+          <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem;">extension_off</span>
+          <h3>Belum ada mod tersedia</h3>
+          <p>Jadilah yang pertama mengupload mod!</p>
+          <button id="empty-upload-button" class="button button-primary" style="margin-top: 1rem;">
+            <span class="material-symbols-outlined">upload</span>
+            Upload Mod Pertama
+          </button>
+        </div>
+        
+        <div class="mod-grid" id="mod-grid">
+          <!-- Mod cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="animate__animated animate__fadeInUp">
+      <div class="footer-content">
+        <div class="contact-info">
+          <span class="material-symbols-outlined">mail</span>
+          <a href="mailto:takashihayabusha@gmail.com" style="color: white;">takashihayabusha@gmail.com</a>
+        </div>
+        <p class="creator-credit">Creator by: @ab.iqqq</p>
+        <p>&copy; <span id="current-year"></span> ModMe - Koleksi Mod Terbaik</p>
+      </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fab animate__animated animate__bounceIn animate__delay-2s" id="fab-help">
+      <span class="material-symbols-outlined">support_agent</span>
+    </div>
+    
+    <!-- Upload Dialog -->
+    <div class="dialog-container" id="upload-dialog">
+      <div class="dialog-content">
+        <h2 class="dialog-title">
+          <span class="material-symbols-outlined">upload</span>
+          Upload Mod Baru
+        </h2>
+        
+        <form id="mod-form">
+          <div class="form-group">
+            <label for="mod-title" class="form-label">Judul Mod*</label>
+            <input type="text" id="mod-title" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mod-author" class="form-label">Nama Pembuat*</label>
+            <input type="text" id="mod-author" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mod-version" class="form-label">Versi*</label>
+            <input type="text" id="mod-version" class="form-input" placeholder="Contoh: 1.0.0" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mod-image" class="form-label">URL Gambar (Opsional)</label>
+            <input type="url" id="mod-image" class="form-input" placeholder="https://example.com/image.jpg">
+          </div>
+          
+          <div class="form-group">
+            <label for="mod-download" class="form-label">URL Download*</label>
+            <input type="url" id="mod-download" class="form-input" placeholder="https://example.com/mod.zip" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mod-description" class="form-label">Deskripsi*</label>
+            <textarea id="mod-description" class="form-input form-textarea" required placeholder="Deskripsikan mod Anda secara detail..."></textarea>
+          </div>
+          
+          <div class="dialog-actions">
+            <button type="button" id="cancel-upload" class="button button-secondary">
+              Batal
+            </button>
+            <button type="submit" class="button button-primary">
+              <span class="material-symbols-outlined">upload</span>
+              Upload Mod
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyALlluPM-J8uUKD11K2UpYBBgb2K_W2f2c",
+  authDomain: "chat-public-c2064.firebaseapp.com",
+  databaseURL: "https://chat-public-c2064-default-rtdb.firebaseio.com",
+  projectId: "chat-public-c2064",
+  storageBucket: "chat-public-c2064.firebasestorage.app",
+  messagingSenderId: "81486849253",
+  appId: "1:81486849253:web:6523636f2a050770dc200c",
+  measurementId: "G-NX5LTLJ1Q7"
+};
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    // DOM Elements
+    const modGrid = document.getElementById('mod-grid');
+    const emptyState = document.getElementById('empty-state');
+    const uploadButton = document.getElementById('upload-button');
+    const emptyUploadButton = document.getElementById('empty-upload-button');
+    const uploadDialog = document.getElementById('upload-dialog');
+    const cancelUpload = document.getElementById('cancel-upload');
+    const modForm = document.getElementById('mod-form');
+    const fabHelp = document.getElementById('fab-help');
+    
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Dialog functions
+    function showDialog(dialog) {
+      dialog.style.display = 'flex';
+    }
+    
+    function closeDialog(dialog) {
+      dialog.style.display = 'none';
+    }
+    
+    // Event listeners
+    uploadButton.addEventListener('click', () => showDialog(uploadDialog));
+    emptyUploadButton.addEventListener('click', () => showDialog(uploadDialog));
+    cancelUpload.addEventListener('click', () => closeDialog(uploadDialog));
+    
+    fabHelp.addEventListener('click', () => {
+      alert('Hubungi kami di takashihayabusha@gmail.com untuk bantuan lebih lanjut!');
+    });
+    
+    // Form submission
+    modForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const modData = {
+        title: document.getElementById('mod-title').value,
+        author: document.getElementById('mod-author').value,
+        version: document.getElementById('mod-version').value,
+        imageUrl: document.getElementById('mod-image').value || 'https://via.placeholder.com/400x180?text=Mod+Image',
+        downloadUrl: document.getElementById('mod-download').value,
+        description: document.getElementById('mod-description').value,
+        rating: 0,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      };
+      
+      // Push mod data to Firebase
+      database.ref('mods').push(modData)
+        .then(() => {
+          alert('Mod berhasil diupload! Terima kasih telah berkontribusi.');
+          modForm.reset();
+          closeDialog(uploadDialog);
+        })
+        .catch((error) => {
+          alert('Error uploading mod: ' + error.message);
+        });
+    });
+    
+    // Load mods from Firebase
+    function loadMods() {
+      database.ref('mods').orderByChild('timestamp').on('value', (snapshot) => {
+        modGrid.innerHTML = '';
+        
+        if (snapshot.exists()) {
+          emptyState.style.display = 'none';
+          
+          snapshot.forEach((childSnapshot) => {
+            const mod = childSnapshot.val();
+            const modId = childSnapshot.key;
+            
+            const modCard = document.createElement('div');
+            modCard.className = 'mod-card animate';
+            modCard.innerHTML = `
+              <img src="${mod.imageUrl}" alt="${mod.title}" class="mod-image">
+              <div class="mod-content">
+                <h3 class="mod-title">${mod.title}</h3>
+                <div class="mod-meta">
+                  <span>Oleh: ${mod.author}</span>
+                  <span>v${mod.version}</span>
+                </div>
+                <p class="mod-description">${mod.description}</p>
+                <div class="mod-actions">
+                  <a href="${mod.downloadUrl}" target="_blank" class="button button-primary">
+                    <span class="material-symbols-outlined">download</span>
+                    Unduh
+                  </a>
+                  <span class="material-symbols-outlined">star</span>
+                  <span>${mod.rating || '0'}</span>
+                </div>
+              </div>
+            `;
+            
+            modGrid.appendChild(modCard);
+          });
+          
+          // Animate mod cards
+          animateModCards();
+        } else {
+          emptyState.style.display = 'block';
+        }
+      });
+    }
+    
+    // Animate mod cards on scroll
+    function animateModCards() {
+      const modCards = document.querySelectorAll('.mod-card');
+      
+      const animateOnScroll = () => {
+        modCards.forEach((card, index) => {
+          const cardPosition = card.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.2;
+          
+          if (cardPosition < screenPosition) {
+            setTimeout(() => {
+              card.classList.add('animate');
+            }, index * 100);
+          }
+        });
+      };
+      
+      // Run once on load
+      animateOnScroll();
+      
+      // Run on scroll
+      window.addEventListener('scroll', animateOnScroll);
+    }
+    
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMods();
+    });
+  </script>
+</body>
+</html>
