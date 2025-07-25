@@ -35,6 +35,7 @@
       --md-sys-color-on-surface-variant: #49454F;
       --md-sys-color-error: #B3261E;
       --md-sys-color-on-error: #FFFFFF;
+      --md-sys-color-star: #FFC107;
     }
 
     /* Dark Theme */
@@ -49,6 +50,7 @@
         --md-sys-color-on-surface: #E6E1E5;
         --md-sys-color-surface-variant: #49454F;
         --md-sys-color-on-surface-variant: #CAC4D0;
+        --md-sys-color-star: #FFD54F;
       }
     }
 
@@ -133,6 +135,7 @@
       transition: all 0.3s ease;
       opacity: 0;
       transform: translateY(20px);
+      position: relative;
     }
 
     .mod-card.animate {
@@ -185,6 +188,36 @@
       align-items: center;
     }
 
+    /* Star Rating */
+    .star-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .star-icon {
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .star-icon.active {
+      color: var(--md-sys-color-star);
+      transform: scale(1.1);
+    }
+
+    .star-icon:hover {
+      transform: scale(1.2);
+    }
+
+    .download-count {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
     /* Buttons */
     .button {
       display: inline-flex;
@@ -213,6 +246,34 @@
     .button-secondary {
       background-color: var(--md-sys-color-secondary-container);
       color: var(--md-sys-color-on-secondary-container);
+    }
+
+    .button-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    /* Delete Button */
+    .delete-mod {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: var(--md-sys-color-error);
+      color: var(--md-sys-color-on-error);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border: none;
+    }
+
+    .mod-card:hover .delete-mod {
+      opacity: 1;
     }
 
     /* Search Bar */
@@ -394,10 +455,159 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
 
+    /* Comment Dialog Styles */
+    .comment-dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .comment-dialog-content {
+      background-color: var(--md-sys-color-surface);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .comment-dialog-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--md-sys-color-outline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .comment-dialog-title {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--md-sys-color-primary);
+    }
+
+    .comment-dialog-close {
+      background: none;
+      border: none;
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    .comment-dialog-body {
+      padding: 1.5rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .comment-dialog-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--md-sys-color-outline);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .comment-dialog-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--md-sys-color-outline);
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      resize: none;
+      min-height: 60px;
+      max-height: 120px;
+    }
+
+    .comment-dialog-send {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border: none;
+      border-radius: 20px;
+      padding: 0 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Comment Item Styles */
+    .comment-item {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--md-sys-color-surface-variant);
+    }
+
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-author {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .comment-text {
+      font-size: 0.875rem;
+      color: var(--md-sys-color-on-surface-variant);
+      word-break: break-word;
+    }
+
+    .comment-time {
+      font-size: 0.75rem;
+      color: var(--md-sys-color-on-surface-variant);
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+
+    .delete-comment {
+      color: var(--md-sys-color-error);
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-left: 0.5rem;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: var(--md-sys-color-on-surface-variant);
+      padding: 1rem 0;
+    }
+
     /* Animations */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     /* Responsive */
@@ -542,20 +752,41 @@
         </form>
       </div>
     </div>
+    
+    <!-- Comment Dialog -->
+    <div class="comment-dialog" id="comment-dialog">
+      <div class="comment-dialog-content">
+        <div class="comment-dialog-header">
+          <h3 class="comment-dialog-title">Komentar</h3>
+          <button class="comment-dialog-close" id="comment-dialog-close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="comment-dialog-body" id="comment-dialog-body">
+          <!-- Comments will be loaded here -->
+        </div>
+        <div class="comment-dialog-footer">
+          <textarea class="comment-dialog-input" id="comment-dialog-input" placeholder="Tulis komentar Anda..."></textarea>
+          <button class="comment-dialog-send" id="comment-dialog-send">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     // Firebase configuration
     const firebaseConfig = {
-  apiKey: "AIzaSyALlluPM-J8uUKD11K2UpYBBgb2K_W2f2c",
-  authDomain: "chat-public-c2064.firebaseapp.com",
-  databaseURL: "https://chat-public-c2064-default-rtdb.firebaseio.com",
-  projectId: "chat-public-c2064",
-  storageBucket: "chat-public-c2064.firebasestorage.app",
-  messagingSenderId: "81486849253",
-  appId: "1:81486849253:web:6523636f2a050770dc200c",
-  measurementId: "G-NX5LTLJ1Q7"
-};
+      apiKey: "AIzaSyALlluPM-J8uUKD11K2UpYBBgb2K_W2f2c",
+      authDomain: "chat-public-c2064.firebaseapp.com",
+      databaseURL: "https://chat-public-c2064-default-rtdb.firebaseio.com",
+      projectId: "chat-public-c2064",
+      storageBucket: "chat-public-c2064.firebasestorage.app",
+      messagingSenderId: "81486849253",
+      appId: "1:81486849253:web:6523636f2a050770dc200c",
+      measurementId: "G-NX5LTLJ1Q7"
+    };
     
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
@@ -571,8 +802,24 @@
     const modForm = document.getElementById('mod-form');
     const fabHelp = document.getElementById('fab-help');
     
+    // Comment Dialog Elements
+    const commentDialog = document.getElementById('comment-dialog');
+    const commentDialogClose = document.getElementById('comment-dialog-close');
+    const commentDialogBody = document.getElementById('comment-dialog-body');
+    const commentDialogInput = document.getElementById('comment-dialog-input');
+    const commentDialogSend = document.getElementById('comment-dialog-send');
+    let currentModId = null;
+    
     // Set current year in footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Generate random user ID and name for comments
+    const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+    const randomNames = ['PlayerOne', 'GameMaster', 'ModLover', 'CyberNinja', 'PixelArtist', 'CodeWizard', 'RetroGamer', 'TechGeek'];
+    const userName = randomNames[Math.floor(Math.random() * randomNames.length)] + Math.floor(Math.random() * 100);
+    
+    // Track which mods were uploaded by this user
+    const userMods = new Set();
     
     // Dialog functions
     function showDialog(dialog) {
@@ -583,6 +830,84 @@
       dialog.style.display = 'none';
     }
     
+    // Comment dialog functions
+    function showCommentDialog(modId, modTitle) {
+      currentModId = modId;
+      document.querySelector('.comment-dialog-title').textContent = `Komentar: ${modTitle}`;
+      commentDialog.style.display = 'flex';
+      commentDialogInput.focus();
+      loadComments(modId);
+    }
+
+    function closeCommentDialog() {
+      commentDialog.style.display = 'none';
+      currentModId = null;
+      commentDialogBody.innerHTML = '';
+      commentDialogInput.value = '';
+    }
+
+    function sendComment() {
+      const commentText = commentDialogInput.value.trim();
+      if (commentText && currentModId) {
+        const newComment = {
+          text: commentText,
+          author: userName,
+          userId: userId,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+        
+        database.ref(`comments/${currentModId}`).push(newComment)
+          .then(() => {
+            commentDialogInput.value = '';
+          });
+      }
+    }
+    
+    function loadComments(modId) {
+      commentDialogBody.innerHTML = '<p class="no-comments">Memuat komentar...</p>';
+      
+      database.ref(`comments/${modId}`).orderByChild('timestamp').on('value', (snapshot) => {
+        commentDialogBody.innerHTML = '';
+        
+        if (snapshot.exists()) {
+          snapshot.forEach((childSnapshot) => {
+            const comment = childSnapshot.val();
+            const commentId = childSnapshot.key;
+            const commentTime = new Date(comment.timestamp).toLocaleString();
+            const firstLetter = comment.author.charAt(0).toUpperCase();
+            
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item';
+            commentItem.innerHTML = `
+              <div class="comment-avatar">${firstLetter}</div>
+              <div class="comment-content">
+                <div class="comment-author">${comment.author}</div>
+                <div class="comment-text">${comment.text}</div>
+                <div class="comment-time">${commentTime}</div>
+              </div>
+              ${comment.userId === userId ? 
+                `<span class="delete-comment material-symbols-outlined" data-comment-id="${commentId}">delete</span>` : ''}
+            `;
+            
+            commentDialogBody.appendChild(commentItem);
+            
+            // Add delete event listener if it's user's comment
+            const deleteButton = commentItem.querySelector('.delete-comment');
+            if (deleteButton) {
+              deleteButton.addEventListener('click', () => {
+                database.ref(`comments/${modId}/${commentId}`).remove();
+              });
+            }
+          });
+        } else {
+          commentDialogBody.innerHTML = '<p class="no-comments">Belum ada komentar</p>';
+        }
+        
+        // Scroll to bottom
+        commentDialogBody.scrollTop = commentDialogBody.scrollHeight;
+      });
+    }
+    
     // Event listeners
     uploadButton.addEventListener('click', () => showDialog(uploadDialog));
     emptyUploadButton.addEventListener('click', () => showDialog(uploadDialog));
@@ -590,6 +915,23 @@
     
     fabHelp.addEventListener('click', () => {
       alert('Hubungi kami di takashihayabusha@gmail.com untuk bantuan lebih lanjut!');
+    });
+    
+    // Comment dialog event listeners
+    commentDialogClose.addEventListener('click', closeCommentDialog);
+    commentDialogSend.addEventListener('click', sendComment);
+    commentDialogInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendComment();
+      }
+    });
+    
+    // Handle click outside dialog to close
+    commentDialog.addEventListener('click', (e) => {
+      if (e.target === commentDialog) {
+        closeCommentDialog();
+      }
     });
     
     // Form submission
@@ -604,12 +946,17 @@
         downloadUrl: document.getElementById('mod-download').value,
         description: document.getElementById('mod-description').value,
         rating: 0,
+        downloads: 0,
+        userId: userId,
         timestamp: firebase.database.ServerValue.TIMESTAMP
       };
       
       // Push mod data to Firebase
-      database.ref('mods').push(modData)
+      const newModRef = database.ref('mods').push();
+      newModRef.set(modData)
         .then(() => {
+          // Add this mod to user's uploaded mods
+          userMods.add(newModRef.key);
           alert('Mod berhasil diupload! Terima kasih telah berkontribusi.');
           modForm.reset();
           closeDialog(uploadDialog);
@@ -631,9 +978,18 @@
             const mod = childSnapshot.val();
             const modId = childSnapshot.key;
             
+            // Check if this mod was uploaded by current user
+            const isUserMod = mod.userId === userId;
+            if (isUserMod) {
+              userMods.add(modId);
+            }
+            
             const modCard = document.createElement('div');
             modCard.className = 'mod-card animate';
             modCard.innerHTML = `
+              ${isUserMod ? `<button class="delete-mod" data-mod-id="${modId}">
+                <span class="material-symbols-outlined">delete</span>
+              </button>` : ''}
               <img src="${mod.imageUrl}" alt="${mod.title}" class="mod-image">
               <div class="mod-content">
                 <h3 class="mod-title">${mod.title}</h3>
@@ -643,17 +999,52 @@
                 </div>
                 <p class="mod-description">${mod.description}</p>
                 <div class="mod-actions">
-                  <a href="${mod.downloadUrl}" target="_blank" class="button button-primary">
+                  <a href="${mod.downloadUrl}" target="_blank" class="button button-primary download-button" data-mod-id="${modId}">
                     <span class="material-symbols-outlined">download</span>
                     Unduh
                   </a>
-                  <span class="material-symbols-outlined">star</span>
-                  <span>${mod.rating || '0'}</span>
+                  <div class="star-rating" data-mod-id="${modId}">
+                    <span class="material-symbols-outlined star-icon">star</span>
+                    <span class="rating-value">${mod.rating || '0'}</span>
+                  </div>
+                  <div class="download-count">
+                    <span class="material-symbols-outlined">download</span>
+                    <span class="download-value">${mod.downloads || '0'}</span>
+                  </div>
                 </div>
+                <button class="button button-small button-secondary comment-toggle" style="margin-top: 1rem; width: 100%;" data-mod-id="${modId}">
+                  <span class="material-symbols-outlined">comment</span>
+                  Komentar
+                </button>
               </div>
             `;
             
             modGrid.appendChild(modCard);
+            
+            // Initialize rating and download features for this mod
+            initializeModFeatures(modId);
+            
+            // Add comment button event listener
+            const commentButton = modCard.querySelector('.comment-toggle');
+            commentButton.addEventListener('click', () => {
+              showCommentDialog(modId, mod.title);
+            });
+            
+            // Handle delete mod button if it exists
+            const deleteButton = modCard.querySelector('.delete-mod');
+            if (deleteButton) {
+              deleteButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm('Apakah Anda yakin ingin menghapus mod ini?')) {
+                  database.ref(`mods/${modId}`).remove()
+                    .then(() => {
+                      // Also remove ratings and comments
+                      database.ref(`ratings/${modId}`).remove();
+                      database.ref(`comments/${modId}`).remove();
+                    });
+                }
+              });
+            }
           });
           
           // Animate mod cards
@@ -661,6 +1052,78 @@
         } else {
           emptyState.style.display = 'block';
         }
+      });
+    }
+    
+    // Initialize rating and download features for a mod
+    function initializeModFeatures(modId) {
+      // Initialize star rating
+      const starRating = document.querySelector(`.star-rating[data-mod-id="${modId}"]`);
+      const starIcon = starRating.querySelector('.star-icon');
+      const ratingValue = starRating.querySelector('.rating-value');
+      
+      // Check if user has already rated this mod
+      database.ref(`ratings/${modId}/${userId}`).once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+          starIcon.classList.add('active');
+        }
+      });
+      
+      // Handle star click
+      starIcon.addEventListener('click', () => {
+        const isActive = starIcon.classList.contains('active');
+        
+        if (isActive) {
+          // Remove rating
+          database.ref(`ratings/${modId}/${userId}`).remove()
+            .then(() => {
+              starIcon.classList.remove('active');
+              updateModRating(modId);
+            });
+        } else {
+          // Add rating
+          database.ref(`ratings/${modId}/${userId}`).set(true)
+            .then(() => {
+              starIcon.classList.add('active');
+              updateModRating(modId);
+            });
+        }
+      });
+      
+      // Update mod rating in realtime
+      database.ref(`ratings/${modId}`).on('value', (snapshot) => {
+        updateModRating(modId);
+      });
+      
+      // Handle download button
+      const downloadButton = document.querySelector(`.download-button[data-mod-id="${modId}"]`);
+      downloadButton.addEventListener('click', () => {
+        // Increment download count
+        database.ref(`mods/${modId}/downloads`).transaction((current) => {
+          return (current || 0) + 1;
+        });
+      });
+      
+      // Update download count in realtime
+      database.ref(`mods/${modId}/downloads`).on('value', (snapshot) => {
+        const downloadValue = document.querySelector(`.download-count .download-value[data-mod-id="${modId}"]`);
+        if (downloadValue) {
+          downloadValue.textContent = snapshot.val() || '0';
+        }
+      });
+    }
+    
+    // Update mod rating display
+    function updateModRating(modId) {
+      database.ref(`ratings/${modId}`).once('value').then((snapshot) => {
+        const ratingCount = snapshot.numChildren();
+        const ratingValue = document.querySelector(`.star-rating[data-mod-id="${modId}"] .rating-value`);
+        if (ratingValue) {
+          ratingValue.textContent = ratingCount;
+        }
+        
+        // Update the rating in the mod data
+        database.ref(`mods/${modId}/rating`).set(ratingCount);
       });
     }
     
